@@ -16,7 +16,7 @@ unit = dict((k, [u for u in unitlist if k in u])
             for k in squares)
                               
 
-peers = dict ((s, set(sum(unit[s],[]))-set([s])) # dictionary with key:value pairs as square:(list of peers) 
+peers = dict ((s, set(sum(units[s],[]))-set([s])) # dictionary with key:value pairs as square:(list of peers) 
               for s in squares)
 
 def fill_square(board):
@@ -53,7 +53,6 @@ def build_peers(board):
         list_of_peers = []
     
     return new_board 
-
     
 def keep_valid(board):
     '''
@@ -102,24 +101,4 @@ def solve(grid):
     
     generate_possible_boards(board)
             
-
-
-sudoku_grid_easy2 = [2, 7, 4, 0, 9, 1, 0, 0, 5, 
-                     1, 0, 0, 5, 0, 0, 0, 9, 0,
-                     6, 0, 0, 0, 0, 3, 2, 8, 0,
-                     0, 0, 1, 9, 0, 0, 0, 0, 8,
-                     0, 0, 5, 1, 0, 0, 6, 0, 0,
-                     7, 0, 0, 0, 8, 0, 0, 0, 3,
-                     4, 0, 2, 0, 0, 0, 0, 0, 9,
-                     0, 0, 0, 0, 0, 0, 0, 7, 0,
-                     8, 0, 0, 3, 4, 9, 0, 0, 0]
-
-for i in range(len(sudoku_grid_easy2)):
-    sudoku_grid_easy2[i] = str(sudoku_grid_easy2[i])
-    
-B1 = ''.join(sudoku_grid_easy2)
-
-B1_filled = make_board(B1)
-
-print(keep_valid(B1_filled))
 
