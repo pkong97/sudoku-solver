@@ -16,7 +16,7 @@ unit = dict((k, [u for u in unitlist if k in u])
             for k in squares)
                               
 
-peers = dict ((s, set(sum(units[s],[]))-set([s])) # dictionary with key:value pairs as square:(list of peers) 
+peers = dict ((s, set(sum(unit[s],[]))-set([s])) # dictionary with key:value pairs as square:(list of peers) 
               for s in squares)
 
 def fill_square(board):
@@ -29,7 +29,7 @@ def fill_square(board):
     tick = 9
     for i in copyboard.keys():
         if copyboard[i] == '0':
-            for n in range(1, 10):
+            for n in '123456789':
                 copyboard[i] = n
                 listofboards.append(copyboard)
                 copyboard = board.copy()
@@ -53,6 +53,7 @@ def build_peers(board):
         list_of_peers = []
     
     return new_board 
+
     
 def keep_valid(board):
     '''
@@ -61,13 +62,12 @@ def keep_valid(board):
     '''
     filled = fill_square(board)
     
-    peers_board = {}
-    for i in range(0, (len(filled))): #iterating through list of dict
+    for i in range(0, len(filled)): #iterating through list of dict
         peers_board = build_peers(filled[i])
         current_board = filled[i]
         for k in current_board.keys(): #dict
-            if current_board[k] != 0 and current_board[k] in peers_board[k]:
-                del filled[i]
+            if current_board[k] != '0' and current_board[k] in peers_board[k]: #if current square empty, next board
+                filled.remove(filled[i])
         
     return filled
                         
@@ -101,4 +101,3 @@ def solve(grid):
     
     generate_possible_boards(board)
             
-
