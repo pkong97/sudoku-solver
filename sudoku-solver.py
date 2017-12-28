@@ -61,15 +61,22 @@ def keep_valid(board):
     check each board units to see if it is valid
     '''
     filled = fill_square(board)
+    to_remove = []
+    to_remove2 = []
     
     for i in range(0, len(filled)): #iterating through list of dict
         peers_board = build_peers(filled[i])
         current_board = filled[i]
         for k in current_board.keys(): #dict
             if current_board[k] != '0' and current_board[k] in peers_board[k]: #if current square empty, next board
-                filled.remove(filled[i])
+                to_remove.append(filled[i])
+                to_remove2.append(k)
+                
+
+    #for i in to_remove:
+        #filled.remove(i)
         
-    return filled
+    return to_remove, to_remove2
                         
 def generate_possible_boards(filled):
     '''
@@ -101,3 +108,26 @@ def solve(grid):
     
     generate_possible_boards(board)
             
+
+
+sudoku_grid_easy2 = [2, 7, 4, 0, 9, 1, 0, 0, 5, 
+                     1, 0, 0, 5, 0, 0, 0, 9, 0,
+                     6, 0, 0, 0, 0, 3, 2, 8, 0,
+                     0, 0, 1, 9, 0, 0, 0, 0, 8,
+                     0, 0, 5, 1, 0, 0, 6, 0, 0,
+                     7, 0, 0, 0, 8, 0, 0, 0, 3,
+                     4, 0, 2, 0, 0, 0, 0, 0, 9,
+                     0, 0, 0, 0, 0, 0, 0, 7, 0,
+                     8, 0, 0, 3, 4, 9, 0, 0, 0]
+
+for i in range(len(sudoku_grid_easy2)):
+    sudoku_grid_easy2[i] = str(sudoku_grid_easy2[i])
+    
+B1 = ''.join(sudoku_grid_easy2)
+
+B1_filled = make_board(B1)
+
+B1_p = build_peers(B1_filled)
+
+B1_fl = fill_square(B1_filled)
+
