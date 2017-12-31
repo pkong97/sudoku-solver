@@ -23,12 +23,16 @@ def fill_square(board):
     '''
     take board and produce a list of new boards with 
     first blank spot filled with integers from 1 to 9
+    
+    dictionary -> listof dictionary
     '''
     listofboards = []
     copyboard = board.copy()
     tick = 9
+    sq_filled = ''
     for i in copyboard.keys():
         if copyboard[i] == '0':
+            sq_filled = i
             for n in '123456789':
                 copyboard[i] = n
                 listofboards.append(copyboard)
@@ -37,11 +41,11 @@ def fill_square(board):
             if tick == 0:
                 break
                 
-    return listofboards
+    return listofboards, sq_filled
 
 def build_peers(board):
     '''
-    board -> dictionary of board with values as a list of peers
+    dictionary -> dictionary of board with values as a list of peers
     '''
     new_board = board.copy()
     new_board2 = board.copy()
@@ -55,36 +59,26 @@ def build_peers(board):
     return new_board 
 
     
-def keep_valid(board):
+def keep_valid(board, sq_filled):
     '''
-    listofboards -> listofboards
+    listofboards key -> listofboards
     check each board units to see if it is valid
     '''
     filled = fill_square(board)
     to_remove = []
-    to_remove2 = []
     
     for i in range(0, len(filled)): #iterating through list of dict
         peers_board = build_peers(filled[i])
         current_board = filled[i]
         for k in current_board.keys(): #dict
-            if current_board[k] != '0' and current_board[k] in peers_board[k]: #if current square empty, next board
-                to_remove.append(filled[i])
-                to_remove2.append(k)
-                
-
-    #for i in to_remove:
-        #filled.remove(i)
-        
-    return to_remove, to_remove2
-                        
-def generate_possible_boards(filled):
-    '''
-    produce list of possible boards, keeps only valid boards
-    '''
+            if k == sq_filled and current_board[k] in peers_board[k]: #if current square empty, next board
+                to_remove.append(current_board)
     
-    return keep_valid(filled)
-    
+    for i in to_remove:
+        filled.remove(i)
+                 
+    return filled
+                            
 def make_board(grid):
     '''
     produce dict with key: squares
@@ -100,34 +94,23 @@ def solve(grid):
     '''
     grid is string with values of 0-9, 0 meaning empty square on sudoku board
     '''
-    rows = 'ABCDEFGHI'
-    cols = '123456789'
-    squares = cross(rows, cols)
     
     board = make_board(grid)
     
-    generate_possible_boards(board)
-            
-
-
-sudoku_grid_easy2 = [2, 7, 4, 0, 9, 1, 0, 0, 5, 
-                     1, 0, 0, 5, 0, 0, 0, 9, 0,
-                     6, 0, 0, 0, 0, 3, 2, 8, 0,
-                     0, 0, 1, 9, 0, 0, 0, 0, 8,
-                     0, 0, 5, 1, 0, 0, 6, 0, 0,
-                     7, 0, 0, 0, 8, 0, 0, 0, 3,
-                     4, 0, 2, 0, 0, 0, 0, 0, 9,
-                     0, 0, 0, 0, 0, 0, 0, 7, 0,
-                     8, 0, 0, 3, 4, 9, 0, 0, 0]
-
-for i in range(len(sudoku_grid_easy2)):
-    sudoku_grid_easy2[i] = str(sudoku_grid_easy2[i])
+    branch = keep_valid(board, sq_filled)
     
-B1 = ''.join(sudoku_grid_easy2)
+    while len(branch) > 0:
+    
+        if len(branch) == 1:
+            print(branch)
+        
+        else:
+            for i in branch:
+                b = fill_square(i)
+                new_branch = keep_valid(b[0], b[1])
+                if len(new_branch) == 1:
+                    print(new_branch)
 
-B1_filled = make_board(B1)
-
-B1_p = build_peers(B1_filled)
-
-B1_fl = fill_square(B1_filled)
-
+    return "No solution"
+        
+       
