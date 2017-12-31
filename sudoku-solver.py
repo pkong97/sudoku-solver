@@ -59,25 +59,24 @@ def build_peers(board):
     return new_board 
 
     
-def keep_valid(board, sq_filled):
+def keep_valid(lob, sq_filled):
     '''
     listofboards key -> listofboards
     check each board units to see if it is valid
     '''
-    filled = fill_square(board)
     to_remove = []
     
-    for i in range(0, len(filled)): #iterating through list of dict
-        peers_board = build_peers(filled[i])
-        current_board = filled[i]
+    for i in range(0, len(lob)): #iterating through list of dict
+        peers_board = build_peers(lob[i])
+        current_board = lob[i]
         for k in current_board.keys(): #dict
             if k == sq_filled and current_board[k] in peers_board[k]: #if current square empty, next board
                 to_remove.append(current_board)
     
     for i in to_remove:
-        filled.remove(i)
+        lob.remove(i)
                  
-    return filled
+    return lob
                             
 def make_board(grid):
     '''
@@ -90,27 +89,29 @@ def make_board(grid):
     assert len(board) == 81
     return board
 
-def solve(grid):
+def solve(board):
     '''
     grid is string with values of 0-9, 0 meaning empty square on sudoku board
     '''
     
-    board = make_board(grid)
+    filled = fill_square(board)
     
-    branch = keep_valid(board, sq_filled)
+    branch = keep_valid(filled[0], filled[1])
     
     while len(branch) > 0:
-    
-        if len(branch) == 1:
-            print(branch)
-        
+        if len(branch) == 1 and '0' not in branch[0].values():
+            return branch[0]
         else:
             for i in branch:
                 b = fill_square(i)
                 new_branch = keep_valid(b[0], b[1])
-                if len(new_branch) == 1:
-                    print(new_branch)
+                if len(new_branch) == 1 and '0' not in new_branch[0].values():
+                    return new_branch[0]
+                else:
+                    branch = new_branch
 
     return "No solution"
         
-       
+            
+    
+            
